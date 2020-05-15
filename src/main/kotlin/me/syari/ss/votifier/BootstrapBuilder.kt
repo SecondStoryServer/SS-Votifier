@@ -60,7 +60,7 @@ object BootstrapBuilder: OnEnable, OnDisable {
                     keyPair = load(rsaDirectory)
                 }
             } catch (ex: Exception) {
-                Main.plugin.logger.log(
+                plugin.logger.log(
                     Level.SEVERE, "Error reading configuration file or RSA tokens", ex
                 )
             }

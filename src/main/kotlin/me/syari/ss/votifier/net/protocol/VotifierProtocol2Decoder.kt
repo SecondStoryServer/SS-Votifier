@@ -35,10 +35,7 @@ object VotifierProtocol2Decoder: MessageToMessageDecoder<String>() {
         if (!hmacEqual(sigBytes, payload.toByteArray(StandardCharsets.UTF_8), key)) {
             throw CorruptedFrameException("Signature is not valid (invalid token?)")
         }
-        if (votePayload["username"].asString.length > 16) {
-            throw CorruptedFrameException("Username too long")
-        }
-        val vote = Vote(votePayload)
+        val vote = Vote.from(votePayload) ?: return
         list.add(vote)
         ctx.pipeline().remove(this)
     }

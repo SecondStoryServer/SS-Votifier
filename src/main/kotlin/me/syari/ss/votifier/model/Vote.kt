@@ -2,6 +2,7 @@ package me.syari.ss.votifier.model
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import me.syari.ss.votifier.Main.Companion.plugin
 import java.util.Arrays
 import java.util.Base64
 
@@ -12,13 +13,11 @@ data class Vote(
     val timeStamp: String,
     val additionalData: ByteArray?
 ) {
-    constructor(jsonObject: JsonObject): this(
-        jsonObject["serviceName"].asString,
-        jsonObject["username"].asString,
-        jsonObject["address"].asString,
-        getTimestamp(jsonObject["timestamp"]),
-        jsonObject.additionalData
-    )
+    @Suppress("DEPRECATION")
+    val player by lazy {
+        val player = plugin.server.getOfflinePlayer(username)
+        if(player.name.equals(username, true)) player else null
+    }
 
     override fun toString(): String {
         val data = if (additionalData != null) Base64.getEncoder().encodeToString(additionalData) else "null"
@@ -27,12 +26,12 @@ data class Vote(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other == null || javaClass != other.javaClass) return false
-        val vote = other as Vote
-        if (serviceName != vote.serviceName) return false
-        if (username != vote.username) return false
-        if (address != vote.address) return false
-        return if (timeStamp != vote.timeStamp) false else Arrays.equals(additionalData, vote.additionalData)
+        if (other !is Vote) return false
+        if (serviceName != other.serviceName) return false
+        if (username != other.username) return false
+        if (address != other.address) return false
+        if (timeStamp != other.timeStamp) return false
+        return Arrays.equals(additionalData, other.additionalData)
     }
 
     override fun hashCode(): Int {
@@ -44,15 +43,27 @@ data class Vote(
     }
 
     companion object {
-        private fun getTimestamp(jsonElement: JsonElement): String {
+        fun from(jsonObject: JsonObject): Vote? {
             return try {
-                jsonElement.asLong.toString()
-            } catch (e: Exception) {
-                jsonElement.asString
+                val serviceName = jsonObject["serviceName"].asString
+                val userName = jsonObject["username"].asString
+                val address = jsonObject["address"].asString
+                val timeStamp = jsonObject["timestamp"].asTimeStamp
+                val additionalData = jsonObject.additionalData
+                Vote(serviceName, userName, address, timeStamp, additionalData)
+            } catch (ex: Exception) {
+                null
             }
         }
 
-        inline val JsonObject.additionalData
+        private inline val JsonElement.asTimeStamp
+            get() = try {
+                asLong.toString()
+            } catch (ex: Exception) {
+                asString
+            }
+
+        private inline val JsonObject.additionalData
             get() = if (has("additionalData")) Base64.getDecoder().decode(get("additionalData").asString) else null
     }
 
