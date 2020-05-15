@@ -16,7 +16,7 @@ data class Vote(
     @Suppress("DEPRECATION")
     val player by lazy {
         val player = plugin.server.getOfflinePlayer(username)
-        if(player.name.equals(username, true)) player else null
+        if (player.name.equals(username, true)) player else null
     }
 
     override fun toString(): String {

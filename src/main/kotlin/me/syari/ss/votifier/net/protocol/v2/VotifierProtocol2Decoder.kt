@@ -1,4 +1,4 @@
-package me.syari.ss.votifier.net.protocol
+package me.syari.ss.votifier.net.protocol.v2
 
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.CorruptedFrameException
@@ -32,7 +32,10 @@ object VotifierProtocol2Decoder: MessageToMessageDecoder<String>() {
         val key = BootstrapBuilder.key
         val sigHash = voteMessage["signature"].asString
         val sigBytes = Base64.getDecoder().decode(sigHash)
-        if (!hmacEqual(sigBytes, payload.toByteArray(StandardCharsets.UTF_8), key)) {
+        if (!hmacEqual(
+                sigBytes, payload.toByteArray(StandardCharsets.UTF_8), key
+            )
+        ) {
             throw CorruptedFrameException("Signature is not valid (invalid token?)")
         }
         val vote = Vote.from(votePayload) ?: return

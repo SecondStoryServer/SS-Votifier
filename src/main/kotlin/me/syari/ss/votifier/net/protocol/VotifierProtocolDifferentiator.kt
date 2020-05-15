@@ -7,6 +7,8 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder
 import io.netty.handler.codec.string.StringDecoder
 import io.netty.handler.codec.string.StringEncoder
 import me.syari.ss.votifier.net.VotifierSession
+import me.syari.ss.votifier.net.protocol.v1.VotifierProtocol1Decoder
+import me.syari.ss.votifier.net.protocol.v2.VotifierProtocol2Decoder
 import java.nio.charset.StandardCharsets
 
 object VotifierProtocolDifferentiator: ByteToMessageDecoder() {
@@ -27,13 +29,17 @@ object VotifierProtocolDifferentiator: ByteToMessageDecoder() {
             ctx.pipeline().addAfter(
                 "protocol2LengthDecoder", "protocol2StringDecoder", StringDecoder(StandardCharsets.UTF_8)
             )
-            ctx.pipeline().addAfter("protocol2StringDecoder", "protocol2VoteDecoder", VotifierProtocol2Decoder)
+            ctx.pipeline().addAfter(
+                "protocol2StringDecoder", "protocol2VoteDecoder", VotifierProtocol2Decoder
+            )
             ctx.pipeline().addAfter(
                 "protocol2VoteDecoder", "protocol2StringEncoder", StringEncoder(StandardCharsets.UTF_8)
             )
         } else {
             session.version = VotifierSession.ProtocolVersion.ONE
-            ctx.pipeline().addAfter("protocolDifferentiator", "protocol1Handler", VotifierProtocol1Decoder())
+            ctx.pipeline().addAfter(
+                "protocolDifferentiator", "protocol1Handler", VotifierProtocol1Decoder()
+            )
         }
         ctx.pipeline().remove(this)
     }

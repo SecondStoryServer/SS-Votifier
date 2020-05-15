@@ -23,9 +23,21 @@ import java.util.concurrent.ThreadFactory
 import java.util.logging.Level
 
 class VotifierServerBootstrap(private val host: String, private val port: Int) {
-    private var bossLoopGroup: EventLoopGroup
-    private var eventLoopGroup: EventLoopGroup
+    private val bossLoopGroup: EventLoopGroup
+    private val eventLoopGroup: EventLoopGroup
     private var serverChannel: Channel? = null
+
+    init {
+        if (USE_EPOLL) {
+            bossLoopGroup = EpollEventLoopGroup(1, createThreadFactory("Votifier epoll boss"))
+            eventLoopGroup = EpollEventLoopGroup(3, createThreadFactory("Votifier epoll worker"))
+            plugin.logger.info("Using epoll transport to accept votes.")
+        } else {
+            bossLoopGroup = NioEventLoopGroup(1, createThreadFactory("Votifier NIO boss"))
+            eventLoopGroup = NioEventLoopGroup(3, createThreadFactory("Votifier NIO worker"))
+            plugin.logger.info("Using NIO transport to accept votes.")
+        }
+    }
 
     fun start() {
         val voteInboundHandler = VoteInboundHandler()
@@ -42,10 +54,7 @@ class VotifierServerBootstrap(private val host: String, private val port: Int) {
                     serverChannel = future.channel()
                     plugin.logger.info("Votifier enabled on socket " + serverChannel?.localAddress() + ".")
                 } else {
-                    var socketAddress = future.channel().localAddress()
-                    if (socketAddress == null) {
-                        socketAddress = InetSocketAddress(host, port)
-                    }
+                    val socketAddress = future.channel().localAddress() ?: InetSocketAddress(host, port)
                     plugin.logger.log(
                         Level.SEVERE, "Votifier was not able to bind to $socketAddress", future.cause()
                     )
@@ -75,18 +84,6 @@ class VotifierServerBootstrap(private val host: String, private val port: Int) {
                 thread.isDaemon = true
                 thread
             }
-        }
-    }
-
-    init {
-        if (USE_EPOLL) {
-            bossLoopGroup = EpollEventLoopGroup(1, createThreadFactory("Votifier epoll boss"))
-            eventLoopGroup = EpollEventLoopGroup(3, createThreadFactory("Votifier epoll worker"))
-            plugin.logger.info("Using epoll transport to accept votes.")
-        } else {
-            bossLoopGroup = NioEventLoopGroup(1, createThreadFactory("Votifier NIO boss"))
-            eventLoopGroup = NioEventLoopGroup(3, createThreadFactory("Votifier NIO worker"))
-            plugin.logger.info("Using NIO transport to accept votes.")
         }
     }
 }

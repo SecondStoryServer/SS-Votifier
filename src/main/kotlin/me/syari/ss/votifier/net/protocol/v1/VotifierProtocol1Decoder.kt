@@ -1,4 +1,4 @@
-package me.syari.ss.votifier.net.protocol
+package me.syari.ss.votifier.net.protocol.v1
 
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufUtil
@@ -7,7 +7,7 @@ import io.netty.handler.codec.ByteToMessageDecoder
 import io.netty.handler.codec.CorruptedFrameException
 import me.syari.ss.votifier.BootstrapBuilder
 import me.syari.ss.votifier.model.Vote
-import me.syari.ss.votifier.net.protocol.v1crypto.RSA.decrypt
+import me.syari.ss.votifier.net.protocol.v1.RSA.decrypt
 import me.syari.ss.votifier.util.QuietException
 import java.nio.charset.StandardCharsets
 
@@ -23,7 +23,7 @@ class VotifierProtocol1Decoder: ByteToMessageDecoder() {
         if (buf.readableBytes() < 256) {
             return
         }
-        if (buf.readableBytes() > 256) {
+        if (256 < buf.readableBytes()) {
             throw QuietException(
                 "Could not decrypt data from " + ctx.channel().remoteAddress() + " as it is too long. Attack?"
             )
@@ -39,7 +39,7 @@ class VotifierProtocol1Decoder: ByteToMessageDecoder() {
             )
         }
         val all = String(block, StandardCharsets.US_ASCII)
-        val split = all.split("\n").toTypedArray()
+        val split = all.split("\n")
         if (split.size < 5) {
             throw QuietException("Not enough fields specified in vote. This is not a NuVotifier issue. Got ${split.size} fields, but needed 5.")
         }

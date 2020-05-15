@@ -1,4 +1,4 @@
-package me.syari.ss.votifier.net.protocol.v1crypto
+package me.syari.ss.votifier.net.protocol.v1
 
 import java.io.File
 import java.io.FileOutputStream
