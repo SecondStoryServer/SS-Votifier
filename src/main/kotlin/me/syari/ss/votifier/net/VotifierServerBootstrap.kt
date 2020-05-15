@@ -40,14 +40,13 @@ class VotifierServerBootstrap(private val host: String, private val port: Int) {
     }
 
     fun start() {
-        val voteInboundHandler = VoteInboundHandler()
         ServerBootstrap().channel(if (USE_EPOLL) EpollServerSocketChannel::class.java else NioServerSocketChannel::class.java)
             .group(bossLoopGroup, eventLoopGroup).childHandler(object: ChannelInitializer<SocketChannel>() {
                 override fun initChannel(channel: SocketChannel) {
                     channel.attr(VotifierSession.KEY).set(VotifierSession())
-                    channel.pipeline().addLast("greetingHandler", VotifierGreetingHandler)
-                    channel.pipeline().addLast("protocolDifferentiator", VotifierProtocolDifferentiator)
-                    channel.pipeline().addLast("voteHandler", voteInboundHandler)
+                    channel.pipeline().addLast("greetingHandler", VotifierGreetingHandler())
+                    channel.pipeline().addLast("protocolDifferentiator", VotifierProtocolDifferentiator())
+                    channel.pipeline().addLast("voteHandler", VoteInboundHandler())
                 }
             }).bind(host, port).addListener(ChannelFutureListener { future: ChannelFuture ->
                 if (future.isSuccess) {

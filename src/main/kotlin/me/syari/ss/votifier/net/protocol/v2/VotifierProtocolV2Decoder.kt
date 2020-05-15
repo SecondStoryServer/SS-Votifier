@@ -17,8 +17,10 @@ import java.util.Base64
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-object VotifierProtocolV2Decoder: MessageToMessageDecoder<String>() {
-    private val RANDOM = SecureRandom()
+class VotifierProtocolV2Decoder: MessageToMessageDecoder<String>() {
+    companion object {
+        private val RANDOM = SecureRandom()
+    }
 
     @Throws(CorruptedFrameException::class, RuntimeException::class)
     override fun decode(ctx: ChannelHandlerContext, s: String, list: MutableList<Any>) {

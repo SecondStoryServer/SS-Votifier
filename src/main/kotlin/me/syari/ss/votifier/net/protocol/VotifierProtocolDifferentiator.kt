@@ -11,8 +11,10 @@ import me.syari.ss.votifier.net.protocol.v1.VotifierProtocolV1Decoder
 import me.syari.ss.votifier.net.protocol.v2.VotifierProtocolV2Decoder
 import java.nio.charset.StandardCharsets
 
-object VotifierProtocolDifferentiator: ByteToMessageDecoder() {
-    private const val PROTOCOL_2_MAGIC: Short = 0x733A
+class VotifierProtocolDifferentiator: ByteToMessageDecoder() {
+    companion object {
+        private const val PROTOCOL_2_MAGIC: Short = 0x733A
+    }
 
     override fun decode(
         ctx: ChannelHandlerContext, buf: ByteBuf, list: List<Any>
@@ -30,7 +32,7 @@ object VotifierProtocolDifferentiator: ByteToMessageDecoder() {
                 "protocol2LengthDecoder", "protocol2StringDecoder", StringDecoder(StandardCharsets.UTF_8)
             )
             ctx.pipeline().addAfter(
-                "protocol2StringDecoder", "protocol2VoteDecoder", VotifierProtocolV2Decoder
+                "protocol2StringDecoder", "protocol2VoteDecoder", VotifierProtocolV2Decoder()
             )
             ctx.pipeline().addAfter(
                 "protocol2VoteDecoder", "protocol2StringEncoder", StringEncoder(StandardCharsets.UTF_8)
@@ -38,7 +40,7 @@ object VotifierProtocolDifferentiator: ByteToMessageDecoder() {
         } else {
             session.version = VotifierSession.ProtocolVersion.ONE
             ctx.pipeline().addAfter(
-                "protocolDifferentiator", "protocol1Handler", VotifierProtocolV1Decoder
+                "protocolDifferentiator", "protocol1Handler", VotifierProtocolV1Decoder()
             )
         }
         ctx.pipeline().remove(this)

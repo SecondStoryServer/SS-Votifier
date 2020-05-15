@@ -8,7 +8,7 @@ import me.syari.ss.votifier.net.VotifierSession
 import java.nio.charset.StandardCharsets
 
 @Sharable
-object VotifierGreetingHandler: ChannelInboundHandlerAdapter() {
+class VotifierGreetingHandler: ChannelInboundHandlerAdapter() {
     override fun channelActive(ctx: ChannelHandlerContext) {
         val session = ctx.channel().attr(VotifierSession.KEY).get()
         val version = """

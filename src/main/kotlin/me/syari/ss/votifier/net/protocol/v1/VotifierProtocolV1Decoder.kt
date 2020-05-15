@@ -11,7 +11,7 @@ import me.syari.ss.votifier.net.protocol.v1.RSA.decrypt
 import me.syari.ss.votifier.util.QuietException
 import java.nio.charset.StandardCharsets
 
-object VotifierProtocolV1Decoder: ByteToMessageDecoder() {
+class VotifierProtocolV1Decoder: ByteToMessageDecoder() {
     @Throws(QuietException::class)
     override fun decode(
         ctx: ChannelHandlerContext, buf: ByteBuf, list: MutableList<Any>
