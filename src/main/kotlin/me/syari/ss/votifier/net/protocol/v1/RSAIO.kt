@@ -12,22 +12,35 @@ import java.security.spec.X509EncodedKeySpec
 import java.util.Base64
 
 object RSAIO {
+    /**
+     * 鍵をディレクトリに保存します
+     * @param directory ディレクトリ
+     * @param keyPair 鍵
+     * @exception [Exception]
+     */
     @Throws(Exception::class)
     fun save(directory: File, keyPair: KeyPair) {
-        val privateKey = keyPair.private
         val publicKey = keyPair.public
         val publicSpec = X509EncodedKeySpec(publicKey.encoded)
-        val privateSpec = PKCS8EncodedKeySpec(privateKey.encoded)
         FileOutputStream("$directory/public.key").use { publicOut ->
-            FileOutputStream("$directory/private.key").use { privateOut ->
-                publicOut.write(Base64.getEncoder().encode(publicSpec.encoded))
-                privateOut.write(Base64.getEncoder().encode(privateSpec.encoded))
-            }
+            publicOut.write(Base64.getEncoder().encode(publicSpec.encoded))
+        }
+        val privateKey = keyPair.private
+        val privateSpec = PKCS8EncodedKeySpec(privateKey.encoded)
+        FileOutputStream("$directory/private.key").use { privateOut ->
+            privateOut.write(Base64.getEncoder().encode(privateSpec.encoded))
         }
     }
 
+    /**
+     * Base64ファイルを読み込みます
+     * @param directory ディレクトリ
+     * @param name ファイル名
+     * @return [ByteArray]
+     * @exception [IOException]
+     */
     @Throws(IOException::class)
-    fun readB64File(directory: File, name: String): ByteArray {
+    private fun readBase64File(directory: File, name: String): ByteArray {
         val f = File(directory, name)
         val contents = Files.readAllBytes(f.toPath())
         var strContents = String(contents)
@@ -43,13 +56,19 @@ object RSAIO {
         }
     }
 
+    /**
+     * 鍵を読み込みます
+     * @param directory ディレクトリ
+     * @return [KeyPair]
+     * @exception Exception
+     */
     @Throws(Exception::class)
     fun load(directory: File): KeyPair {
-        val encodedPublicKey = readB64File(directory, "public.key")
-        val encodedPrivateKey = readB64File(directory, "private.key")
         val keyFactory = KeyFactory.getInstance("RSA")
+        val encodedPublicKey = readBase64File(directory, "public.key")
         val publicKeySpec = X509EncodedKeySpec(encodedPublicKey)
         val publicKey = keyFactory.generatePublic(publicKeySpec)
+        val encodedPrivateKey = readBase64File(directory, "private.key")
         val privateKeySpec = PKCS8EncodedKeySpec(encodedPrivateKey)
         val privateKey = keyFactory.generatePrivate(privateKeySpec)
         return KeyPair(publicKey, privateKey)

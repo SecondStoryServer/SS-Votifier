@@ -72,7 +72,7 @@ class VoteInboundHandler: SimpleChannelInboundHandler<Vote>() {
     }
 
     private fun fireVotifierEvent(vote: Vote) {
-        VotifierEvent(vote).callEvent()
+        VotifierEvent(vote.serviceName, vote.username).callEvent()
     }
 
     private fun onError(throwable: Throwable, alreadyHandledVote: Boolean, remoteAddress: String) {

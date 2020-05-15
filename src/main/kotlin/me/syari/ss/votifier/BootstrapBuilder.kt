@@ -19,6 +19,9 @@ import java.security.Key
 import java.security.KeyPair
 import java.util.logging.Level
 
+/**
+ * 投票受け入れの設定を行う
+ */
 object BootstrapBuilder: OnEnable, OnDisable {
     override fun onEnable() {
         load(console)
@@ -110,6 +113,10 @@ object BootstrapBuilder: OnEnable, OnDisable {
         }
     }
 
+    /**
+     * コンフィグをリロードします
+     * @param output 結果の出力先
+     */
     fun reload(output: CommandSender) {
         stop()
         load(output)

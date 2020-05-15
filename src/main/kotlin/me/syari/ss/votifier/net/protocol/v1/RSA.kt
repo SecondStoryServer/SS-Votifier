@@ -7,6 +7,12 @@ import java.security.spec.RSAKeyGenParameterSpec
 import javax.crypto.Cipher
 
 object RSA {
+    /**
+     * RSA暗号を解読します
+     * @param data データ
+     * @param key 秘密鍵
+     * @return 解読データ
+     */
     @Throws(Exception::class)
     fun decrypt(data: ByteArray, key: PrivateKey): ByteArray {
         val cipher = Cipher.getInstance("RSA")
@@ -14,6 +20,11 @@ object RSA {
         return cipher.doFinal(data)
     }
 
+    /**
+     * 鍵を生成します
+     * @param bits ビット数
+     * @return [KeyPair]
+     */
     @Throws(Exception::class)
     fun generate(bits: Int): KeyPair {
         val keygen = KeyPairGenerator.getInstance("RSA")

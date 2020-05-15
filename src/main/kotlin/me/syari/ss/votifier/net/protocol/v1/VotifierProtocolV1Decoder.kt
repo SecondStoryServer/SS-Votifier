@@ -11,6 +11,10 @@ import me.syari.ss.votifier.net.protocol.v1.RSA.decrypt
 import me.syari.ss.votifier.util.QuietException
 import java.nio.charset.StandardCharsets
 
+/**
+ * v1 デコーダー
+ * RSAを利用した通信
+ */
 class VotifierProtocolV1Decoder: ByteToMessageDecoder() {
     @Throws(QuietException::class)
     override fun decode(
@@ -24,19 +28,14 @@ class VotifierProtocolV1Decoder: ByteToMessageDecoder() {
             return
         }
         if (256 < buf.readableBytes()) {
-            throw QuietException(
-                "Could not decrypt data from " + ctx.channel().remoteAddress() + " as it is too long. Attack?"
-            )
+            throw QuietException("Could not decrypt data from " + ctx.channel().remoteAddress() + " as it is too long. Attack?")
         }
         var block = ByteBufUtil.getBytes(buf)
         buf.skipBytes(buf.readableBytes())
         block = try {
             decrypt(block, BootstrapBuilder.keyPair.private)
         } catch (e: Exception) {
-            throw CorruptedFrameException(
-                "Could not decrypt data from ${ctx.channel()
-                    .remoteAddress()}. Make sure the public key on the list is correct.", e
-            )
+            throw CorruptedFrameException("Could not decrypt data from ${ctx.channel().remoteAddress()}. Make sure the public key on the list is correct.", e)
         }
         val all = String(block, StandardCharsets.US_ASCII)
         val split = all.split("\n")
@@ -46,7 +45,7 @@ class VotifierProtocolV1Decoder: ByteToMessageDecoder() {
         if (split[0] != "VOTE") {
             throw QuietException("The VOTE opcode was not present. This is not a NuVotifier issue, but a bug with the server list.")
         }
-        val vote = Vote(split[1], split[2], split[3], split[4], null)
+        val vote = Vote(split[1], split[2])
         list.add(vote)
         ctx.pipeline().remove(this)
     }

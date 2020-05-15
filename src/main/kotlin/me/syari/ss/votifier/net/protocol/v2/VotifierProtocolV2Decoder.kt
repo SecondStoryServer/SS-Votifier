@@ -17,6 +17,10 @@ import java.util.Base64
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
+/**
+ * v2 デコーダー
+ * HmacSHA256を利用した通信
+ */
 class VotifierProtocolV2Decoder: MessageToMessageDecoder<String>() {
     companion object {
         private val RANDOM = SecureRandom()
