@@ -6,12 +6,12 @@ import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.ByteToMessageDecoder
 import io.netty.handler.codec.CorruptedFrameException
 import me.syari.ss.votifier.BootstrapBuilder
-import me.syari.ss.votifier.model.Vote
+import me.syari.ss.votifier.api.Vote
 import me.syari.ss.votifier.net.protocol.v1.RSA.decrypt
 import me.syari.ss.votifier.util.QuietException
 import java.nio.charset.StandardCharsets
 
-object VotifierProtocol1Decoder: ByteToMessageDecoder() {
+object VotifierProtocolV1Decoder: ByteToMessageDecoder() {
     @Throws(QuietException::class)
     override fun decode(
         ctx: ChannelHandlerContext, buf: ByteBuf, list: MutableList<Any>

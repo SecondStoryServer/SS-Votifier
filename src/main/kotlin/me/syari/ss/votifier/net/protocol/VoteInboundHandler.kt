@@ -7,8 +7,8 @@ import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
 import me.syari.ss.core.scheduler.CustomScheduler.run
 import me.syari.ss.votifier.Main.Companion.plugin
-import me.syari.ss.votifier.model.Vote
-import me.syari.ss.votifier.model.VotifierEvent
+import me.syari.ss.votifier.api.Vote
+import me.syari.ss.votifier.api.VotifierEvent
 import me.syari.ss.votifier.net.VotifierSession
 import me.syari.ss.votifier.util.JsonUtil.toJson
 import java.util.concurrent.atomic.AtomicLong

@@ -1,4 +1,4 @@
-package me.syari.ss.votifier.model
+package me.syari.ss.votifier.api
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject

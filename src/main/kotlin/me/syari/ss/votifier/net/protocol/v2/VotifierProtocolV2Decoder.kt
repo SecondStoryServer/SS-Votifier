@@ -4,7 +4,7 @@ import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.CorruptedFrameException
 import io.netty.handler.codec.MessageToMessageDecoder
 import me.syari.ss.votifier.BootstrapBuilder
-import me.syari.ss.votifier.model.Vote
+import me.syari.ss.votifier.api.Vote
 import me.syari.ss.votifier.net.VotifierSession
 import me.syari.ss.votifier.util.JsonUtil.fromJson
 import java.nio.charset.StandardCharsets
@@ -17,7 +17,7 @@ import java.util.Base64
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-object VotifierProtocol2Decoder: MessageToMessageDecoder<String>() {
+object VotifierProtocolV2Decoder: MessageToMessageDecoder<String>() {
     private val RANDOM = SecureRandom()
 
     @Throws(CorruptedFrameException::class, RuntimeException::class)

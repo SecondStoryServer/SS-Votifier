@@ -22,8 +22,8 @@ class VotifierSession {
 
     enum class ProtocolVersion(val humanReadable: String) {
         UNKNOWN("unknown"),
-        ONE("protocol v1"),
-        TWO("protocol v2");
+        ONE("v1"),
+        TWO("v2");
     }
 
     companion object {
