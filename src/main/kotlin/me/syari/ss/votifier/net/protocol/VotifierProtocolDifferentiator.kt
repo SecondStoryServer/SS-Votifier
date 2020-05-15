@@ -38,7 +38,7 @@ object VotifierProtocolDifferentiator: ByteToMessageDecoder() {
         } else {
             session.version = VotifierSession.ProtocolVersion.ONE
             ctx.pipeline().addAfter(
-                "protocolDifferentiator", "protocol1Handler", VotifierProtocol1Decoder()
+                "protocolDifferentiator", "protocol1Handler", VotifierProtocol1Decoder
             )
         }
         ctx.pipeline().remove(this)
