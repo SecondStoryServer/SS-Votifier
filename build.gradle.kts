@@ -24,7 +24,7 @@ repositories {
 
 dependencies {
     implementation("com.destroystokyo.paper:paper-api:1.15.2-R0.1-SNAPSHOT")
-    implementation("me.syari.ss.core:SS-Core:2.7")
+    implementation("me.syari.ss.core:SS-Core:2.10")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.netty:netty-handler:4.1.49.Final")
     implementation("io.netty", "netty-transport-native-epoll", "4.1.49.Final", classifier = "linux-x86_64")
