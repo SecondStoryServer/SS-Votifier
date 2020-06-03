@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "me.syari.ss.votifier"
-version = "1.1"
+version = "1.1.1"
 
 val ssMavenRepoURL: String by extra
 val ssMavenRepoUploadURL: String by extra
@@ -24,7 +24,7 @@ repositories {
 
 dependencies {
     implementation("com.destroystokyo.paper:paper-api:1.15.2-R0.1-SNAPSHOT")
-    implementation("me.syari.ss.core:SS-Core:2.10")
+    implementation("me.syari.ss.core:SS-Core:3.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.netty:netty-handler:4.1.49.Final")
     implementation("io.netty", "netty-transport-native-epoll", "4.1.49.Final", classifier = "linux-x86_64")

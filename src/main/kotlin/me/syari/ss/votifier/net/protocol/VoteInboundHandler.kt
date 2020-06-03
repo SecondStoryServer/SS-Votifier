@@ -5,7 +5,7 @@ import io.netty.channel.ChannelFutureListener
 import io.netty.channel.ChannelHandler.Sharable
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
-import me.syari.ss.core.scheduler.CustomScheduler.run
+import me.syari.ss.core.scheduler.CreateScheduler.run
 import me.syari.ss.votifier.Main.Companion.plugin
 import me.syari.ss.votifier.api.Vote
 import me.syari.ss.votifier.api.VotifierEvent
