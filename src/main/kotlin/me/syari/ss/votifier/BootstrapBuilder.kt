@@ -8,9 +8,9 @@ import me.syari.ss.core.config.CustomConfig
 import me.syari.ss.core.config.dataType.ConfigDataType
 import me.syari.ss.votifier.Main.Companion.plugin
 import me.syari.ss.votifier.net.VotifierServerBootstrap
+import me.syari.ss.votifier.net.protocol.v1.RSA.generate
 import me.syari.ss.votifier.net.protocol.v1.RSAIO.load
 import me.syari.ss.votifier.net.protocol.v1.RSAIO.save
-import me.syari.ss.votifier.net.protocol.v1.RSA.generate
 import me.syari.ss.votifier.util.KeyCreator
 import me.syari.ss.votifier.util.TokenUtil.newToken
 import org.bukkit.command.CommandSender

@@ -43,27 +43,31 @@ class VotifierServerBootstrap(
     }
 
     fun start() {
-        ServerBootstrap().channel(if (USE_EPOLL) EpollServerSocketChannel::class.java else NioServerSocketChannel::class.java).group(
-                    bossLoopGroup,
-                    eventLoopGroup
-                ).childHandler(object: ChannelInitializer<SocketChannel>() {
-                    override fun initChannel(channel: SocketChannel) {
-                        channel.attr(VotifierSession.KEY).set(VotifierSession())
-                        channel.pipeline().addLast("greetingHandler", VotifierGreetingHandler())
-                        channel.pipeline().addLast("protocolDifferentiator", VotifierProtocolDifferentiator())
-                        channel.pipeline().addLast("voteHandler", VoteInboundHandler())
-                    }
-                }).bind(host, port).addListener(ChannelFutureListener { future: ChannelFuture ->
-                    if (future.isSuccess) {
-                        serverChannel = future.channel()
-                        plugin.logger.info("Votifier enabled on socket " + serverChannel?.localAddress() + ".")
-                    } else {
-                        val socketAddress = future.channel().localAddress() ?: InetSocketAddress(host, port)
-                        plugin.logger.log(
-                            Level.SEVERE, "Votifier was not able to bind to $socketAddress", future.cause()
-                        )
-                    }
-                })
+        val channelClass = if (USE_EPOLL) {
+            EpollServerSocketChannel::class.java
+        } else {
+            NioServerSocketChannel::class.java
+        }
+        ServerBootstrap().channel(channelClass).group(
+            bossLoopGroup, eventLoopGroup
+        ).childHandler(object: ChannelInitializer<SocketChannel>() {
+            override fun initChannel(channel: SocketChannel) {
+                channel.attr(VotifierSession.KEY).set(VotifierSession())
+                channel.pipeline().addLast("greetingHandler", VotifierGreetingHandler())
+                channel.pipeline().addLast("protocolDifferentiator", VotifierProtocolDifferentiator())
+                channel.pipeline().addLast("voteHandler", VoteInboundHandler())
+            }
+        }).bind(host, port).addListener(ChannelFutureListener { future: ChannelFuture ->
+            if (future.isSuccess) {
+                serverChannel = future.channel()
+                plugin.logger.info("Votifier enabled on socket " + serverChannel?.localAddress() + ".")
+            } else {
+                val socketAddress = future.channel().localAddress() ?: InetSocketAddress(host, port)
+                plugin.logger.log(
+                    Level.SEVERE, "Votifier was not able to bind to $socketAddress", future.cause()
+                )
+            }
+        })
     }
 
     fun shutdown() {

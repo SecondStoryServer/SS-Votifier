@@ -1,7 +1,6 @@
 package me.syari.ss.votifier.api
 
 import com.google.gson.JsonObject
-import me.syari.ss.votifier.Main.Companion.plugin
 
 /**
  * 投票データ
