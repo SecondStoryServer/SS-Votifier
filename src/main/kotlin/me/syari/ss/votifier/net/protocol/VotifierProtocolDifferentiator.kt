@@ -17,7 +17,9 @@ class VotifierProtocolDifferentiator: ByteToMessageDecoder() {
     }
 
     override fun decode(
-        ctx: ChannelHandlerContext, buf: ByteBuf, list: List<Any>
+        ctx: ChannelHandlerContext,
+        buf: ByteBuf,
+        list: List<Any>
     ) {
         val readable = buf.readableBytes()
         if (readable < 2) return

@@ -19,7 +19,10 @@ object RSAIO {
      * @exception [Exception]
      */
     @Throws(Exception::class)
-    fun save(directory: File, keyPair: KeyPair) {
+    fun save(
+        directory: File,
+        keyPair: KeyPair
+    ) {
         val publicKey = keyPair.public
         val publicSpec = X509EncodedKeySpec(publicKey.encoded)
         FileOutputStream("$directory/public.key").use { publicOut ->
@@ -40,7 +43,10 @@ object RSAIO {
      * @exception [IOException]
      */
     @Throws(IOException::class)
-    private fun readBase64File(directory: File, name: String): ByteArray {
+    private fun readBase64File(
+        directory: File,
+        name: String
+    ): ByteArray {
         val f = File(directory, name)
         val contents = Files.readAllBytes(f.toPath())
         var strContents = String(contents)

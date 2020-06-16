@@ -14,7 +14,10 @@ object RSA {
      * @return 解読データ
      */
     @Throws(Exception::class)
-    fun decrypt(data: ByteArray, key: PrivateKey): ByteArray {
+    fun decrypt(
+        data: ByteArray,
+        key: PrivateKey
+    ): ByteArray {
         val cipher = Cipher.getInstance("RSA")
         cipher.init(Cipher.DECRYPT_MODE, key)
         return cipher.doFinal(data)

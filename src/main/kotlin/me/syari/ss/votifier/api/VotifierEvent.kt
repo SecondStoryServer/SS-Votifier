@@ -8,7 +8,10 @@ import me.syari.ss.votifier.Main
  * @param serviceName 投票元
  * @param username ユーザー名
  */
-class VotifierEvent(val serviceName: String, val username: String): CustomEvent() {
+class VotifierEvent(
+    val serviceName: String,
+    val username: String
+): CustomEvent() {
     /**
      * ユーザー名から取得したプレイヤー
      */
