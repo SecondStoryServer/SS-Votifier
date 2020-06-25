@@ -6,6 +6,7 @@ import io.netty.channel.ChannelFuture
 import io.netty.channel.ChannelFutureListener
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.EventLoopGroup
+import io.netty.channel.ServerChannel
 import io.netty.channel.epoll.Epoll
 import io.netty.channel.epoll.EpollEventLoopGroup
 import io.netty.channel.epoll.EpollServerSocketChannel
@@ -43,7 +44,7 @@ class VotifierServerBootstrap(
     }
 
     fun start() {
-        val channelClass = if (USE_EPOLL) {
+        val channelClass: Class<out ServerChannel> = if (USE_EPOLL) {
             EpollServerSocketChannel::class.java
         } else {
             NioServerSocketChannel::class.java
