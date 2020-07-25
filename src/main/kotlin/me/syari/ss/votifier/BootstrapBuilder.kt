@@ -4,7 +4,7 @@ import me.syari.ss.core.Main.Companion.console
 import me.syari.ss.core.auto.OnDisable
 import me.syari.ss.core.auto.OnEnable
 import me.syari.ss.core.config.CreateConfig.config
-import me.syari.ss.core.config.CustomConfig
+import me.syari.ss.core.config.CustomFileConfig
 import me.syari.ss.core.config.dataType.ConfigDataType
 import me.syari.ss.votifier.Main.Companion.plugin
 import me.syari.ss.votifier.net.VotifierServerBootstrap
@@ -73,7 +73,7 @@ object BootstrapBuilder: OnEnable, OnDisable {
     private const val HOST_PATH = "host"
     private const val DEFAULT_HOST = "0.0.0.0"
 
-    private fun CustomConfig.getHost(): Pair<String, Boolean> {
+    private fun CustomFileConfig.getHost(): Pair<String, Boolean> {
         val host = get(HOST_PATH, ConfigDataType.STRING)
         return if (host == null) {
             var ip = plugin.server.ip
@@ -90,7 +90,7 @@ object BootstrapBuilder: OnEnable, OnDisable {
     private const val PORT_PATH = "port"
     private const val DEFAULT_PORT = 8192
 
-    private fun CustomConfig.getPort(): Pair<Int, Boolean> {
+    private fun CustomFileConfig.getPort(): Pair<Int, Boolean> {
         val port = get(PORT_PATH, ConfigDataType.INT)
         return if (port == null || port < 0) {
             set(PORT_PATH, DEFAULT_HOST)
@@ -102,7 +102,7 @@ object BootstrapBuilder: OnEnable, OnDisable {
 
     private const val TOKEN_PATH = "token"
 
-    private fun CustomConfig.getToken(): Pair<String, Boolean> {
+    private fun CustomFileConfig.getToken(): Pair<String, Boolean> {
         val token = get(TOKEN_PATH, ConfigDataType.STRING)
         return if (token == null) {
             val randomToken = newToken()
